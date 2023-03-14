@@ -5,8 +5,44 @@ import { CompanyList } from "./src/users/CompanyList"
 
 // ===================================================================================================================
 // Applicants and Companies List
-var applicantList: ApplicantList = new ApplicantList()
-var companyList: CompanyList = new CompanyList()
+var applicantList: ApplicantList
+var companyList: CompanyList
+
+let applicantListString: string | null = localStorage.getItem("applicantList")
+let companyListString: string | null = localStorage.getItem("companyList")
+
+if (applicantListString) {
+    applicantList = new ApplicantList()
+    applicantList.parseJSON(applicantListString)
+} else {
+    applicantList = new ApplicantList()
+}
+
+if (companyListString) {
+    companyList = new CompanyList()
+    companyList.parseJSON(companyListString)
+} else {
+    companyList = new CompanyList()
+}
+
+
+// Applicants and Companies Table
+var applicantTableRow: string
+var companyTableRow: string
+
+var applicantTableRow_: string | null = localStorage.getItem("applicantTableRow")
+var companyTableRow_: string | null = localStorage.getItem("companyTableRow")
+
+if (applicantTableRow_) {
+    applicantTableRow = applicantTableRow_
+} else {
+    applicantTableRow = ``
+}
+if (companyTableRow_) {
+    companyTableRow = companyTableRow_
+} else {
+    companyTableRow = ``
+}
 
 // ===================================================================================================================
 // Register new Applicant Button
@@ -32,9 +68,28 @@ if (registerApplicantButton) {
         }
         
         applicantList.add(new Applicant(name, email, country, state, Number(cep), description, Number(cpf), Number(age), selectedSkills))
+        addApplicantTableRow(name, email, country, state, Number(cep), description, Number(cpf), Number(age), selectedSkills)
+        localStorage.setItem("applicantList", JSON.stringify(applicantList))
+        localStorage.setItem("applicantTableRow", applicantTableRow)
     }
 }
 
+// Update Applicant Table
+function addApplicantTableRow(name: string, email: string, country: string, state: string, cep: number, description: string, cpf: number, age: number, requiredSkills: Array<string>) {
+    applicantTableRow += `
+<tr>
+    <th id="applicant-name">${name}</th>
+    <th id="applicant-email">${email}</th>
+    <th id="applicant-country">${country}</th>
+    <th id="applicant-state">${state}</th>
+    <th id="applicant-cep">${cep}</th>
+    <th id="applicant-description">${description}</th>
+    <th id="applicant-cnpj">${cpf}</th>
+    <th id="applicant-age">${age}</th>
+    <th id="applicant-required-skills">${requiredSkills}</th>
+</tr>
+`
+}
 // ===================================================================================================================
 // Register new Company Button
 var registerCompanyButton = <HTMLButtonElement>document.querySelector("#register-company-button")
@@ -58,6 +113,40 @@ if (registerCompanyButton) {
         }
 
         companyList.add(new Company(name, email, country, state, Number(cep), description, Number(cnpj), selectedSkills))
-        console.log(companyList);
+        addCompanyTableRow(name, email, country, state, Number(cep), description, Number(cnpj), selectedSkills)
+        localStorage.setItem("companyList", JSON.stringify(companyList))
+        localStorage.setItem("companyTableRow", companyTableRow)
     }
+}
+
+// Update Company Table
+function addCompanyTableRow(name: string, email: string, country: string, state: string, cep: number, description: string, cnpj: number, requiredSkills: Array<string>) {
+    companyTableRow += `
+<tr>
+    <th id="company-name">${name}</th>
+    <th id="company-email">${email}</th>
+    <th id="company-country">${country}</th>
+    <th id="company-state">${state}</th>
+    <th id="company-cep">${cep}</th>
+    <th id="company-description">${description}</th>
+    <th id="company-cnpj">${cnpj}</th>
+    <th id="company-required-skills">${requiredSkills}</th>
+</tr>
+`
+}
+
+// ===================================================================================================================
+// Display Company Table
+var companyTableBody = <HTMLButtonElement>document.querySelector("#table-company-body")
+
+if (companyTableBody) {
+    companyTableBody.innerHTML = companyTableRow
+}
+
+// ===================================================================================================================
+// Display Applicant Table
+var applicantTableBody = <HTMLButtonElement>document.querySelector("#table-applicant-body")
+
+if (applicantTableBody) {
+    applicantTableBody.innerHTML = applicantTableRow
 }
