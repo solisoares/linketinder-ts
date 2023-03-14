@@ -49,6 +49,10 @@ abstract class UserList {
 
         return usersBySkill
     }
+
+    abstract stringifyJSON(): string
+
+    abstract parseJSON(json: any): any
 }
 
 export { UserList }
