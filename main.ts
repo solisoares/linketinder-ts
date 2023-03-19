@@ -2,6 +2,8 @@ import { Applicant } from "./src/users/Applicant"
 import { Company } from "./src/users/Company"
 import { ApplicantList } from "./src/users/ApplicantList"
 import { CompanyList } from "./src/users/CompanyList"
+import { ApplicantValidator } from "./src/validation/ApplicantValidator"
+import { CompanyValidator } from "./src/validation/CompanyValidator"
 
 // ===================================================================================================================
 // Applicants and Companies List
@@ -58,7 +60,7 @@ if (registerApplicantButton) {
         let description: string = (<HTMLInputElement>document.getElementById("register-applicant-description")).value
         let cpf: string = (<HTMLInputElement>document.getElementById("register-applicant-cpf")).value
         let age: string = (<HTMLInputElement>document.getElementById("register-applicant-age")).value
-        
+
         let allSkills = document.getElementsByClassName("register-applicant-input-skill")
         var selectedSkills: Array<string> = []
         for (let skill of allSkills) {
@@ -66,11 +68,17 @@ if (registerApplicantButton) {
                 selectedSkills.push((skill as HTMLInputElement).value);
             }
         }
-        
-        applicantList.add(new Applicant(name, email, country, state, Number(cep), description, Number(cpf), Number(age), selectedSkills))
-        addApplicantTableRow(name, email, country, state, Number(cep), description, Number(cpf), Number(age), selectedSkills)
-        localStorage.setItem("applicantList", JSON.stringify(applicantList))
-        localStorage.setItem("applicantTableRow", applicantTableRow)
+
+        try {
+            ApplicantValidator.checkAll(name, email, country, state, cep, cpf, age)
+            applicantList.add(new Applicant(name, email, country, state, Number(cep), description, Number(cpf), Number(age), selectedSkills))
+            addApplicantTableRow(name, email, country, state, Number(cep), description, Number(cpf), Number(age), selectedSkills)
+            localStorage.setItem("applicantList", JSON.stringify(applicantList))
+            localStorage.setItem("applicantTableRow", applicantTableRow)
+            alert("Applicant registered!")
+        } catch (error: any) {
+            alert(error.message)
+        }
     }
 }
 
@@ -112,10 +120,16 @@ if (registerCompanyButton) {
             }
         }
 
-        companyList.add(new Company(name, email, country, state, Number(cep), description, Number(cnpj), selectedSkills))
-        addCompanyTableRow(name, email, country, state, Number(cep), description, Number(cnpj), selectedSkills)
-        localStorage.setItem("companyList", JSON.stringify(companyList))
-        localStorage.setItem("companyTableRow", companyTableRow)
+        try {
+            CompanyValidator.checkAll(name, email, country, state, cep, cnpj)
+            companyList.add(new Company(name, email, country, state, Number(cep), description, Number(cnpj), selectedSkills))
+            addCompanyTableRow(name, email, country, state, Number(cep), description, Number(cnpj), selectedSkills)
+            localStorage.setItem("companyList", JSON.stringify(companyList))
+            localStorage.setItem("companyTableRow", companyTableRow)
+            alert("Company registered")
+        } catch (error: any) {
+            alert(error.message)
+        }
     }
 }
 
