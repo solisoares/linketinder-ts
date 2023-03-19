@@ -23,5 +23,23 @@ Technologies used
 * HTML
 * Regex
 
+<br>
+
+Build:
+```bash
+# Install npm packages
+npm i -D webpack typescript  ts-loader jquery @types/jquery
+# Build
+npm run build  # webpack build
+```
 
 
+<br>
+
+Run:
+```bash
+# Install live-server package
+npm -i live-server
+# Run local live server
+npm start
+```
